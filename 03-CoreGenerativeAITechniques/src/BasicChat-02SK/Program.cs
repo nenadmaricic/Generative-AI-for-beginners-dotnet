@@ -11,7 +11,7 @@ if (string.IsNullOrEmpty(githubToken))
     var config = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
     githubToken = config["GITHUB_TOKEN"];
 }
-var modelId = "Phi-3.5-mini-instruct";
+var modelId = "openai/gpt-4o";
 var uri = "https://models.github.ai/inference";
 
 
@@ -28,7 +28,7 @@ Kernel kernel = builder.Build();
 var chat = kernel.GetRequiredService<IChatCompletionService>();
 
 var history = new ChatHistory();
-history.AddSystemMessage("You are a useful chatbot. If you don't know an answer, say 'I don't know!'. Always reply in a funny way. Use emojis if possible.");
+history.AddSystemMessage("You are a product review assistant. If you don't know an answer, say 'I don't know!'. Always reply in a very formal way. Speak Serbian.");
 
 while (true)
 {

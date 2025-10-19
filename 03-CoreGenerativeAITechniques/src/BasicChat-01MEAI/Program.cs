@@ -5,18 +5,25 @@ using Microsoft.Extensions.Configuration;
 using System.Text;
 
 var githubToken = Environment.GetEnvironmentVariable("GITHUB_TOKEN");
-if(string.IsNullOrEmpty(githubToken))
+if (string.IsNullOrEmpty(githubToken))
 {
     var config = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
     githubToken = config["GITHUB_TOKEN"];
+    Console.WriteLine($"GitHub token from configuration = [{githubToken}]");
+}
+else
+{
+    Console.WriteLine("GitHub token found in environment variable.");
+    Console.WriteLine($"GitHub token = [{githubToken}]");
 }
 
-IChatClient client = new ChatCompletionsClient(
+var ccc = new ChatCompletionsClient(
         endpoint: new Uri("https://models.github.ai/inference"),
-        new AzureKeyCredential(githubToken))
-        .AsIChatClient("Phi-3.5-MoE-instruct");
+        new AzureKeyCredential(githubToken)
+);
+IChatClient client = ccc.AsIChatClient("openai/gpt-4o");
 
-// here we're building the prompt
+// // here we're building the prompt
 StringBuilder prompt = new StringBuilder();
 prompt.AppendLine("You will analyze the sentiment of the following product reviews. Each line is its own review. Output the sentiment of each review in a bulleted list and then provide a generate sentiment of all reviews. ");
 prompt.AppendLine("I bought this product and it's amazing. I love it!");
